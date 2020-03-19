@@ -4,3 +4,5 @@ pyscreenshot
 scipy
 numpy
 matplotlib
+flask
+requests
