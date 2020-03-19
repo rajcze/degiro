@@ -22,10 +22,10 @@ DEBUG = {
     'index': 0
     }
 
-#DEBUG = False
+DEBUG = False
 
 def read_screenshot():
-    im = pyscreenshot.grab(bbox=(973, 347, 1224, 389))
+    im = pyscreenshot.grab(bbox=(804, 297, 1079, 354))
     txt = pytesseract.image_to_string(im)
     try:
         txt = RDATA.findall(txt)[0].replace(',', '.')
@@ -93,19 +93,13 @@ def plot_graph(data, pl1, pl2):
 
 def update_data(data, wait=True):
     if DEBUG:
-        if wait:
-            time.sleep(0.1)
         try:
             t = DEBUG['data'][DEBUG['index']][0]
             flt = DEBUG['data'][DEBUG['index']][1]
         except IndexError:
-            if wait:
-                time.sleep(1)
             return None
         DEBUG['index'] += 1
     else:
-        if wait:
-            time.sleep(1)
         t = time.time()
         flt = read_screenshot()
         if flt is None:
@@ -133,6 +127,11 @@ def main(url=None):
     plt.show()
     try:
         while True:
+            if DEBUG:
+                time.sleep(0.1)
+            else:
+                time.sleep(1)
+
             if url:
                 data = requests.get(url).json()
             else:
@@ -164,7 +163,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1] == 'server':
             APP.debug = True
-            APP.run()
+            APP.run(host='0.0.0.0')
         if sys.argv[1] == 'client':
             main(url=sys.argv[2])
     else:
