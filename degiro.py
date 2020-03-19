@@ -164,6 +164,12 @@ def flask_data_live():
     update_data(DATA)
     return jsonify(DATA)
 
+@APP.route('/data_cached')
+def flask_data_cached():
+    time.sleep(TICK_TIME/10.0)
+    return jsonify(DATA)
+
+
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
