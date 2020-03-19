@@ -166,7 +166,7 @@ def flask_data_live():
 
 @APP.route('/data_cached')
 def flask_data_cached():
-    time.sleep(TICK_TIME/10.0)
+    time.sleep(TICK_TIME/3.3)
     return jsonify(DATA)
 
 
