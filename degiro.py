@@ -9,7 +9,7 @@ from scipy import stats
 import numpy
 import random
 import json
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import io
 import base64
 import requests
@@ -22,7 +22,7 @@ DEBUG = {
     'index': 0
     }
 
-DEBUG = False
+#DEBUG = False
 
 def read_screenshot():
     im = pyscreenshot.grab(bbox=(804, 297, 1079, 354))
@@ -125,13 +125,10 @@ def main(url=None):
     plt.ion()
     fig, pl1, pl2 = init_plot()
     plt.show()
+    if DEBUG:
+        TICK_TIME = 0.1
     try:
         while True:
-            if DEBUG:
-                time.sleep(0.1)
-            else:
-                time.sleep(1)
-
             if url:
                 data = requests.get(url).json()
             else:
@@ -149,14 +146,23 @@ def main(url=None):
 
 
 DATA = []
+TICK_TIME = 1.0
 APP = Flask(__name__)
 
-@APP.route('/data')
-def serve_data():
+@APP.route('/tick')
+def flask_tick():
+    global TICK_TIME
+    try:
+        TICK_TIME = float(request.args.get('s'))
+        return jsonify({'tick': TICK_TIME})
+    except (ValueError, TypeError):
+        return jsonify({'old_tick': TICK_TIME})
+
+@APP.route('/data_live')
+def flask_data_live():
+    time.sleep(TICK_TIME)
     update_data(DATA)
     return jsonify(DATA)
-
-
 
 if __name__ == '__main__':
     import sys
