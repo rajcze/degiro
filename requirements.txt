@@ -1,0 +1,6 @@
+pytesseract
+pillow
+pyscreenshot
+scipy
+numpy
+matplotlib
